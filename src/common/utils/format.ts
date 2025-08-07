@@ -81,12 +81,20 @@ export function formatDate (dateTimeFormat: Intl.DateTimeFormat, timestamp: numb
   return format.replace(/YYYY|MM|DD|HH|mm|ss/g, key => date[key])
 }
 
-export function formatPrecision (value: string | number, precision?: number): string {
-  const v = +value
+export function formatPrecision(
+  value: string | number,
+  precision?: number,
+): string {
+  const v = +value;
   if (isNumber(v)) {
-    return v.toFixed(precision ?? 2)
+    const fixed = v.toFixed(precision ?? 2);
+    // 去除末尾多余的0和小数点
+    const trimmed = fixed
+      .replace(/(?:\.0+|\.(\d*?[1-9]))0+$/, ".$1")
+      .replace(/\.$/, "");
+    return trimmed === "" ? "0" : trimmed;
   }
-  return `${value}`
+  return `${value}`;
 }
 
 export function formatBigNumber (value: string | number): string {
